@@ -1,14 +1,18 @@
+import os
 import discord
 import logging
+from dotenv import load_dotenv
 
 class MyClient(discord.Client):
     async def on_ready(self):
         # TODO Check if this is the best way to log something
-        logging.basicConfig(format='%(levelname)s: %(message)s', level=logging.INFO)
-        logging.info('Logged on as {0}!'.format(self.user))
+        logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=logging.INFO)
+        logging.info('Boap is ready!')
 
     async def on_message(self, message):
         logging.info('Message from {0.author}: {0.content}'.format(message))
 
+load_dotenv()
 client = MyClient()
-client.run('NDQ2MTI1MzE2MzY5Mjg1MTIw.WvuMlA.CkKirbpz0bxq2tkqq40UE6h_oU0')
+TOKEN = os.getenv('DISCORD_TOKEN')
+client.run(TOKEN)
