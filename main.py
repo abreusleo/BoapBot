@@ -10,7 +10,7 @@ class MyClient(discord.Client):
         logging.info('Boap is ready!')
 
     async def on_message(self, message):
-        logging.info('Message from {0.author}: {0.content}'.format(message))
+        logging.info('Message from {0.author}: {0.content}'.format(message)) #oi
 
 load_dotenv()
 client = MyClient()
