@@ -4,10 +4,12 @@ We are just starting this bot, so this is  only to store our  documentation link
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install discord.py.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install discord.py and dotenv.
+Make sure to run PowerShell as admin
 
 ```bash
 pip install discord.py
+pip install python-dotenv
 ```
 
 ## Documentations
