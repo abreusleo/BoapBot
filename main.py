@@ -1,8 +1,8 @@
 import os
 import discord
 import logging
-import ModCommands as modCommands
 import dotenv
+import Commands.ModCommands as modCommands
 
 def choose_command_prefix(prefixList, id):
     for el in prefixList:
