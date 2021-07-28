@@ -1,8 +1,10 @@
 # Boap Bot
 
-We are just starting this bot, so this is  only to store our  documentation links
+We are just starting this bot, so this is  only to store our  documentation links.
 
 ## Installation
+
+Please make sure you're using Python 3.9.5
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install discord.py and dotenv.
 Make sure to run PowerShell as admin
