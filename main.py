@@ -26,7 +26,7 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         author = message.author
         channel = message.channel
-        #oi
+
         if message.author == self.user:
             return
 
