@@ -21,8 +21,8 @@ class MyClient(discord.Client):
     async def on_ready(self):
         # TODO Check if this is the best way to log something
         logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=logging.INFO)
-        logging.info('Boap is ready!')
-    
+        logging.info('Boap is ready!')    
+
     async def on_message(self, message):
         author = message.author
         channel = message.channel
@@ -30,11 +30,11 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return
 
-        if message.content.startswith(self.commandPrefix + 'bulk'):
+        if message.content.startswith(self.commandPrefix + 'clear'):
             try:
-                await modCommands.bulk(message)
+                await modCommands.clear(message)
             except:
-                await self.bot_error("Bulk delete", channel)
+                await self.bot_error("Clear", channel)
 
 client = MyClient()
 TOKEN = os.getenv('DISCORD_TOKEN') # Get Token from .env file

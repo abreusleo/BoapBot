@@ -1,4 +1,4 @@
-async def bulk(message):
+async def clear(message):
     channel = message.channel
     msg = message.content.split()
     deletedMessages = await channel.purge(limit = int(msg[1]))
