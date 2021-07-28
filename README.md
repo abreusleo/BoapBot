@@ -4,7 +4,7 @@ We are just starting this bot, so this is  only to store our  documentation link
 
 ## Installation
 
-Please make sure you're using [Python_3.9.5] (https://www.python.org/downloads/release/python-395/)
+Please make sure you're using [Python_3.9.5](https://www.python.org/downloads/release/python-395/)
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install discord.py and dotenv.
 Make sure to run PowerShell as admin
