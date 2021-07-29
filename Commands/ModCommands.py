@@ -1,5 +1,7 @@
 import Storage.DatabaseContext as databaseContext
 
+# TODO Insert Info Logs into Commands
+
 def get_message_after_command(message):
     msg = message.content.split()
     return msg[1]
