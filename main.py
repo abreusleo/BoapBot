@@ -3,6 +3,7 @@ import discord
 import logging
 import dotenv
 import Commands.ModCommands as modCommands
+import Storage.DatabaseContext as databaseContext
 
 def choose_command_prefix(prefixList, id):
     for el in prefixList:
@@ -35,6 +36,12 @@ class MyClient(discord.Client):
                 await modCommands.clear(message)
             except:
                 await self.bot_error("Clear", channel)
+
+        if message.content.startswith(self.commandPrefix + 'prefix'):
+            try:
+                await modCommands.change_prefix(message, os)
+            except:
+                await self.bot_error("Change prefix", channel)
 
 client = MyClient()
 TOKEN = os.getenv('DISCORD_TOKEN') # Get Token from .env file
