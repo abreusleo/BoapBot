@@ -12,6 +12,7 @@ Make sure to run PowerShell as admin
 ```bash
 pip install discord.py
 pip install python-dotenv
+pip install pyodbc
 ```
 
 ## Documentations
