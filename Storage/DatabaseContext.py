@@ -30,4 +30,20 @@ def insert_or_update_server_config(os, id, prefix):
 
     close_context(db_context)
     return
-    
+
+def get_prefix_by_id(os, id):
+    prefix = ""
+
+    db_context = db_connection(os)
+    cursor = db_context.cursor()
+    cursor.execute('SELECT * FROM SERVER_CONFIGURATION WHERE ID = '+str(id)+';')
+    query_result = cursor.fetchall()
+
+    cursor.close()
+    close_context(db_context)
+
+    if not query_result:
+        return os.getenv('DISCORD_COMMAND_PREFIX')
+
+    return query_result
+        
