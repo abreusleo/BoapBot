@@ -1,4 +1,5 @@
 import Storage.DatabaseContext as databaseContext
+import logging
 
 # TODO Insert Info Logs into Commands
 
@@ -17,6 +18,9 @@ async def change_prefix(message, os):
     channel = message.channel
     server_id = message.guild.id
     
-    databaseContext.insert_or_update_server_config(os, server_id, prefix)
-    await channel.send('Prefixo armazenado.')
-    
+    try:
+        databaseContext.insert_or_update_server_config(os, server_id, prefix)
+        await channel.send('Prefixo {} armazenado.'.format(prefix))
+        return prefix
+    except:
+        logging.error('Erro ao armazenar o prefixo escolhido.')

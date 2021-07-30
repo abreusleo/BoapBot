@@ -39,7 +39,7 @@ class MyClient(discord.Client):
 
         if message.content.startswith(self.commandPrefix + 'prefix'):
             try:
-                await modCommands.change_prefix(message, os)
+                self.commandPrefix = await modCommands.change_prefix(message, os)
             except:
                 await self.bot_error("Change prefix", channel)
 
