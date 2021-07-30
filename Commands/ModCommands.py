@@ -17,6 +17,6 @@ async def change_prefix(message, os):
     channel = message.channel
     server_id = message.guild.id
     
-    databaseContext.insert_server_config(os, server_id, prefix)
+    databaseContext.insert_or_update_server_config(os, server_id, prefix)
     await channel.send('Prefixo armazenado.')
     
