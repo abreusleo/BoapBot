@@ -3,47 +3,45 @@ import pyodbc
 
 # TODO Create DB_CONTEXT as a Class
 
-def db_connection(os):
-    SQL_DRIVER = os.getenv('SQL_DRIVER')
-    SQL_SERVER = os.getenv('SQL_SERVER')
-    SQL_DATABASE = os.getenv('SQL_DATABASE')
-    SQL_TRUSTED_CONNECTION = os.getenv('SQL_TRUSTED_CONNECTION')
+class DatabaseContext():
 
-    return pyodbc.connect('Driver='+SQL_DRIVER+';Server='+SQL_SERVER+';Database='+SQL_DATABASE+';'+'Trusted_Connection='+SQL_TRUSTED_CONNECTION+';')
+    def __init__(self, os):
+        SQL_DRIVER = os.getenv('SQL_DRIVER')
+        SQL_SERVER = os.getenv('SQL_SERVER')
+        SQL_DATABASE = os.getenv('SQL_DATABASE')
+        SQL_TRUSTED_CONNECTION = os.getenv('SQL_TRUSTED_CONNECTION')
+        
+        self.COMMAND_PREFIX = os.getenv('DISCORD_COMMAND_PREFIX')
 
-def close_context(db_context):
-    db_context.commit()
-    db_context.close()
-    return
+        self.db_context = pyodbc.connect('Driver='+SQL_DRIVER+';Server='+SQL_SERVER+';Database='+SQL_DATABASE+';'+'Trusted_Connection='+SQL_TRUSTED_CONNECTION+';')
+        self.cursor = self.db_context.cursor()
+        return
 
-def insert_or_update_server_config(os, id, prefix):
-    db_context = db_connection(os)
+    def close_context(self):
+        self.cursor.close()
+        self.db_context.commit()
+        self.db_context.close()
+        return
 
-    cursor = db_context.cursor()
-    cursor.execute('SELECT * FROM SERVER_CONFIGURATION WHERE ID = '+str(id)+';')
-    if len(cursor.fetchall()) == 0:
-        query = 'INSERT INTO SERVER_CONFIGURATION (ID, PREFIX)VALUES ('+str(id)+', \''+prefix+'\');'
-    else:
-        query ='UPDATE SERVER_CONFIGURATION SET PREFIX = \''+prefix+'\' WHERE ID ='+str(id)+';'
-    cursor.execute(query)
-    cursor.close()
+    def insert_or_update_server_config(self, id, prefix):
+        self.cursor.execute('SELECT * FROM SERVER_CONFIGURATION WHERE ID = '+str(id)+';')
+        if len(self.cursor.fetchall()) == 0:
+            query = 'INSERT INTO SERVER_CONFIGURATION (ID, PREFIX)VALUES ('+str(id)+', \''+prefix+'\');'
+        else:
+            query ='UPDATE SERVER_CONFIGURATION SET PREFIX = \''+prefix+'\' WHERE ID ='+str(id)+';'
+        self.cursor.execute(query)
 
-    close_context(db_context)
-    return
+        self.close_context()
+        return
 
-def get_prefix_by_id(os, id):
-    prefix = ""
+    def get_prefix_by_id(self, id):
+        self.cursor.execute('SELECT * FROM SERVER_CONFIGURATION WHERE ID = '+str(id)+';')
+        query_result = self.cursor.fetchall()
 
-    db_context = db_connection(os)
-    cursor = db_context.cursor()
-    cursor.execute('SELECT * FROM SERVER_CONFIGURATION WHERE ID = '+str(id)+';')
-    query_result = cursor.fetchall()
+        self.close_context()
 
-    cursor.close()
-    close_context(db_context)
+        if not query_result:
+            return self.COMMAND_PREFIX
 
-    if not query_result:
-        return os.getenv('DISCORD_COMMAND_PREFIX')
-
-    return query_result
+        return query_result
         
