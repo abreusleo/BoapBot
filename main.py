@@ -5,22 +5,17 @@ import dotenv
 import Commands.ModCommands as modCommands
 import Commands.ConfigCommands as configCommands
 import Commands.Utils as utils
-
-def choose_command_prefix(prefixList, id):
-    for el in prefixList:
-        if el[0] == id:
-            return el[1]
-    return prefixList[0][1]
-
 class MyClient(discord.Client):
     dotenv.load_dotenv()
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "20")
 
     async def bot_error(self, command, channel):
         logging.error("{} error.".format(command))
-        await channel.send('Comando inválido.') 
+        await channel.send('Comando inválido.')
 
     async def on_ready(self):
-        logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=logging.INFO)
+        # TODO 
+        logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=int(self.LOG_LEVEL))
         logging.info('Boap is ready!')    
 
     async def on_message(self, message):

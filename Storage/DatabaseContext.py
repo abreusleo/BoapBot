@@ -4,7 +4,6 @@ import pyodbc
 # TODO Create DB_CONTEXT as a Class
 
 class DatabaseContext():
-
     def __init__(self, os):
         SQL_DRIVER = os.getenv('SQL_DRIVER')
         SQL_SERVER = os.getenv('SQL_SERVER')
