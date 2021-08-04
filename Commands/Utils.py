@@ -1,3 +1,4 @@
+from asyncio.windows_events import NULL
 import logging
 import Storage.DatabaseContext as databaseContext
 
@@ -11,3 +12,9 @@ def get_prefix_by_id(os, id):
     logging.info("Resultado da query {}".format(queryResult))
 
     return queryResult[0][1]
+
+def check_if_tagged(message):
+    msg = message.content.split()
+    if(len(msg) > 1):
+        return msg[1]
+    return NULL

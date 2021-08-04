@@ -9,6 +9,8 @@ class MyClient(discord.Client):
     dotenv.load_dotenv()
     LOG_LEVEL = os.getenv("LOG_LEVEL", "20")
 
+    prefix_cache = {}
+
     async def bot_error(self, command, channel):
         logging.error("{} error.".format(command))
         await channel.send('Comando inválido.')
@@ -24,7 +26,12 @@ class MyClient(discord.Client):
 
         channel = message.channel
         server_id = message.guild.id
-        commandPrefix = utils.get_prefix_by_id(os, server_id)
+        if server_id not in self.prefix_cache:
+            commandPrefix = utils.get_prefix_by_id(os, server_id)
+            self.prefix_cache[server_id] = commandPrefix
+        else:
+            commandPrefix = self.prefix_cache[server_id]
+            logging.info("Resultado da cache [({}, {})]".format(server_id, commandPrefix))
 
         if message.content.startswith(commandPrefix + 'clear'):
             try:
@@ -34,7 +41,14 @@ class MyClient(discord.Client):
 
         if message.content.startswith(commandPrefix + 'prefix'):
             try:
-                await configCommands.change_prefix(message, os)
+                commandPrefix = await configCommands.change_prefix(message, os)
+                self.prefix_cache[server_id] = commandPrefix
+            except:
+                await self.bot_error("Change prefix", channel)
+        
+        if message.content.startswith(commandPrefix + 'info'):
+            try:
+                await modCommands.get_user_info(message)
             except:
                 await self.bot_error("Change prefix", channel)
 
