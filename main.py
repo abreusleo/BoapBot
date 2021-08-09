@@ -16,14 +16,12 @@ class MyClient(discord.Client):
         await channel.send('Comando inválido.')
 
     async def on_ready(self):
-        # TODO 
         logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=int(self.LOG_LEVEL))
         logging.info('Boap is ready!')    
 
     async def on_message(self, message):
         if message.author == self.user:
             return
-
         channel = message.channel
         server_id = message.guild.id
         if server_id not in self.prefix_cache:
