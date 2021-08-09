@@ -40,7 +40,7 @@ class DatabaseContext():
         self.close_context()
 
         if not query_result:
-            return self.COMMAND_PREFIX
+            return [(0,self.COMMAND_PREFIX)]
 
         return query_result
         
