@@ -17,46 +17,39 @@ class MyClient(discord.Client):
 
     async def on_ready(self):
         logging.basicConfig(format='%(asctime)s - %(levelname)s: %(message)s', level=int(self.LOG_LEVEL))
-        logging.info('Boap is ready!')    
+        logging.info('Boap is ready!')
 
     async def on_message(self, message):
         if message.author == self.user:
             return
+
         channel = message.channel
         server_id = message.guild.id
-        if server_id not in self.prefix_cache:
-            commandPrefix = utils.get_prefix_by_id(os, server_id)
-            self.prefix_cache[server_id] = commandPrefix
-        else:
-            commandPrefix = self.prefix_cache[server_id]
-            logging.info("Resultado da cache [({}, {})]".format(server_id, commandPrefix))
+        content = message.content
 
-        if message.content.startswith(commandPrefix + 'clear'):
-            try:
+        commandPrefix, self.prefix_cache = utils.update_cache(server_id, self.prefix_cache, os)
+
+        try:
+            if message.content.startswith(commandPrefix + 'clear'):
                 await modCommands.clear(message)
-            except:
-                await self.bot_error("Clear", channel)
 
-        if message.content.startswith(commandPrefix + 'prefix'):
-            try:
+            elif message.content.startswith(commandPrefix + 'prefix'):
                 commandPrefix = await configCommands.change_prefix(message, os)
                 self.prefix_cache[server_id] = commandPrefix
-            except:
-                await self.bot_error("Change prefix", channel)
-        
-        if message.content.startswith(commandPrefix + 'info'):
-            try:
-                await modCommands.get_user_info(message)
-            except:
-                await self.bot_error("Info", channel)
-        
-        if message.content.startswith(commandPrefix + 'warn'):
-            try:
+            
+            # elif message.content.startswith(commandPrefix + 'info'):
+            #     await modCommands.get_user_info(message)
+            
+            elif message.content.startswith(commandPrefix + 'warn'):
                 warned_user = message.mentions[0].id
                 user = await client.fetch_user(warned_user)
                 await modCommands.warn(server_id, user, message, os)
-            except:
-                await self.bot_error("Warn", channel)
+
+            elif message.content.startswith(commandPrefix + 'status'):
+                await client.change_presence(activity=discord.Streaming(name="Boap Bot", url="https://www.twitch.tv/SugaredBeast"))
+
+        except:
+            await self.bot_error(content.split()[0], channel)
 
 client = MyClient()
 TOKEN = os.getenv('DISCORD_TOKEN') # Get Token from .env file

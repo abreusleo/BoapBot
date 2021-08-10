@@ -25,7 +25,7 @@ class DatabaseContext():
         if len(self.cursor.fetchall()) == 0:
             query = 'INSERT INTO SERVER_CONFIGURATION (ID, PREFIX)VALUES ('+str(id)+', \''+prefix+'\');'
         else:
-            query ='UPDATE SERVER_CONFIGURATION SET PREFIX = \''+prefix+'\' WHERE ID ='+str(id)+';'
+            query = 'UPDATE SERVER_CONFIGURATION SET PREFIX = \''+prefix+'\' WHERE ID ='+str(id)+';'
         self.cursor.execute(query)
 
         self.close_context()
