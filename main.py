@@ -48,7 +48,15 @@ class MyClient(discord.Client):
             try:
                 await modCommands.get_user_info(message)
             except:
-                await self.bot_error("Change prefix", channel)
+                await self.bot_error("Info", channel)
+        
+        if message.content.startswith(commandPrefix + 'warn'):
+            try:
+                warned_user = message.mentions[0].id
+                user = await client.fetch_user(warned_user)
+                await modCommands.warn(server_id, user, message, os)
+            except:
+                await self.bot_error("Warn", channel)
 
 client = MyClient()
 TOKEN = os.getenv('DISCORD_TOKEN') # Get Token from .env file

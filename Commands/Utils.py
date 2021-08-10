@@ -15,7 +15,7 @@ def get_prefix_by_id(os, id):
     return queryResult[0][1]
 
 def check_if_tagged(message):
-    msg = message.content.split()
+    msg = message.split()
     if(len(msg) > 1):
         return msg[1]
     return NULL

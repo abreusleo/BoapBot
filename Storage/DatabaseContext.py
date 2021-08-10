@@ -1,8 +1,6 @@
 from asyncio.windows_events import NULL
 import pyodbc
 
-# TODO Create DB_CONTEXT as a Class
-
 class DatabaseContext():
     def __init__(self, os):
         SQL_DRIVER = os.getenv('SQL_DRIVER')
@@ -32,6 +30,22 @@ class DatabaseContext():
 
         self.close_context()
         return
+
+    def insert_or_update_warns(self, server_id, user_id):
+        query = 'SELECT * FROM USER_WARNS WHERE SERVER_ID = \''+str(server_id)+'\' and USER_ID = \''+str(user_id)+'\';'
+        self.cursor.execute(query)
+        if len(self.cursor.fetchall()) == 0:
+            query = 'INSERT INTO USER_WARNS (SERVER_ID, USER_ID, WARNS) VALUES ('+str(server_id)+', \''+str(user_id)+'\', 1);'
+            warns = 1
+        else:
+            self.cursor.execute('SELECT WARNS FROM USER_WARNS WHERE SERVER_ID = \''+str(server_id)+'\' and USER_ID = \''+str(user_id)+'\';')
+            warns = self.cursor.fetchall()[0][0]
+            warns += 1
+            query = 'UPDATE USER_WARNS SET WARNS = '+ str(warns) + ' WHERE SERVER_ID = \''+str(server_id)+'\' AND USER_ID = \''+str(user_id)+'\';'
+
+        self.cursor.execute(query)
+        self.close_context()
+        return warns
 
     def get_prefix_by_id(self, id):
         self.cursor.execute('SELECT * FROM SERVER_CONFIGURATION WHERE ID = '+str(id)+';')
