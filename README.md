@@ -18,7 +18,7 @@ pip install pyodbc
 To create our data base use this command line
 
 ```bash
-sqlcmd -i C:file_path\\TesteDB.sql
+sqlcmd -i C:file_path\BoapDB.sql
 ```
 
 ## Documentations
