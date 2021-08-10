@@ -15,6 +15,12 @@ pip install python-dotenv
 pip install pyodbc
 ```
 
+To create our data base use this command line
+
+```bash
+sqlcmd -i C:file_path\\TesteDB.sql
+```
+
 ## Documentations
 
 Check the discord API documentation: [Discord.py](https://discordpy.readthedocs.io/en/stable/intro.html)

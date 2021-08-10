@@ -26,26 +26,28 @@ class MyClient(discord.Client):
         channel = message.channel
         server_id = message.guild.id
         content = message.content
+        author = message.author
+        is_admin = author.top_role.permissions.administrator
 
         commandPrefix, self.prefix_cache = utils.update_cache(server_id, self.prefix_cache, os)
 
         try:
-            if message.content.startswith(commandPrefix + 'clear'):
+            if content.startswith(commandPrefix + 'clear'):
                 await modCommands.clear(message)
 
-            elif message.content.startswith(commandPrefix + 'prefix'):
+            elif content.startswith(commandPrefix + 'prefix'):
                 commandPrefix = await configCommands.change_prefix(message, os)
                 self.prefix_cache[server_id] = commandPrefix
             
             # elif message.content.startswith(commandPrefix + 'info'):
             #     await modCommands.get_user_info(message)
             
-            elif message.content.startswith(commandPrefix + 'warn'):
+            elif content.startswith(commandPrefix + 'warn') and is_admin:
                 warned_user = message.mentions[0].id
                 user = await client.fetch_user(warned_user)
                 await modCommands.warn(server_id, user, message, os)
 
-            elif message.content.startswith(commandPrefix + 'status'):
+            elif content.startswith(commandPrefix + 'status'):
                 await client.change_presence(activity=discord.Streaming(name="Boap Bot", url="https://www.twitch.tv/SugaredBeast"))
 
         except:
