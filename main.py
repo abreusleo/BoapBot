@@ -49,6 +49,7 @@ class MyClient(discord.Client):
 
             elif content.startswith(commandPrefix + 'status'):
                 await client.change_presence(activity=discord.Streaming(name="Boap Bot", url="https://www.twitch.tv/SugaredBeast"))
+                await channel.purge(limit = 1)
 
         except:
             await self.bot_error(content.split()[0], channel)
