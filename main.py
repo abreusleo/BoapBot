@@ -1,3 +1,4 @@
+#oi eduardo
 import os
 import discord
 import logging
