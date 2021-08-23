@@ -9,6 +9,8 @@ class MyClient(discord.Client):
     dotenv.load_dotenv()
     LOG_LEVEL = os.getenv("LOG_LEVEL", "20")
 
+    ModCommands = modCommands.ModCommands()
+
     prefix_cache = {}
 
     async def bot_error(self, command, channel):
@@ -22,18 +24,18 @@ class MyClient(discord.Client):
     async def on_message(self, message):
         if message.author == self.user:
             return
-
         channel = message.channel
         server_id = message.guild.id
         content = message.content
         author = message.author
+
         is_admin = author.top_role.permissions.administrator
 
         commandPrefix, self.prefix_cache = utils.update_cache(server_id, self.prefix_cache, os)
 
         try:
             if content.startswith(commandPrefix + 'clear'):
-                await modCommands.clear(message)
+                await self.ModCommands.clear(message)
 
             elif content.startswith(commandPrefix + 'prefix'):
                 commandPrefix = await configCommands.change_prefix(message, os)
@@ -42,7 +44,7 @@ class MyClient(discord.Client):
             elif content.startswith(commandPrefix + 'warn') and is_admin:
                 warned_user = message.mentions[0].id
                 user = await client.fetch_user(warned_user)
-                await modCommands.warn(server_id, user, message, os)
+                await self.ModCommands.warn(server_id, user, message)
 
             elif content.startswith(commandPrefix + 'status'):
                 await client.change_presence(activity=discord.Streaming(name="Boap Bot", url="https://www.twitch.tv/SugaredBeast"))

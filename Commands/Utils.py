@@ -8,7 +8,7 @@ def get_message_after_command(message):
     return msg[1]
 
 def get_prefix_by_id(os, id):
-    database_context = databaseContext.DatabaseContext(os)
+    database_context = databaseContext.DatabaseContext()
 
     queryResult = database_context.get_prefix_by_id(id)
     logging.info("Resultado da query {}".format(queryResult))

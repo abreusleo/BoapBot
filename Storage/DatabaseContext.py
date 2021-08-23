@@ -1,8 +1,10 @@
-from asyncio.windows_events import NULL
+import os
+import dotenv
 import pyodbc
 
 class DatabaseContext():
-    def __init__(self, os):
+    def __init__(self):
+        dotenv.load_dotenv()
         SQL_DRIVER = os.getenv('SQL_DRIVER')
         SQL_SERVER = os.getenv('SQL_SERVER')
         SQL_DATABASE = os.getenv('SQL_DATABASE')
