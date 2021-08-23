@@ -39,12 +39,6 @@ class MyClient(discord.Client):
                 commandPrefix = await configCommands.change_prefix(message, os)
                 self.prefix_cache[server_id] = commandPrefix
             
-            # elif message.content.startswith(commandPrefix + 'info'):
-            #     await modCommands.get_user_info(message)
-
-            # elif message.content.startswith(commandPrefix + 'date'):
-            #     await channel.send('{} ta no servidor desde {}.'.format(author, author.joined_at))
-            
             elif content.startswith(commandPrefix + 'warn') and is_admin:
                 warned_user = message.mentions[0].id
                 user = await client.fetch_user(warned_user)
