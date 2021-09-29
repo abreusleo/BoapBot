@@ -11,12 +11,10 @@ class ModCommands():
         return
         
     async def clear(self, message):
-        logging.info('Clear start')
         channel = message.channel
         number = utils.get_message_after_command(message)
         deletedMessages = await channel.purge(limit = int(number))
         await channel.send('{} mensagens deletadas.'.format(len(deletedMessages)))
-        logging.info('Clear end')
         return
 
     async def warn(self, server_id, user, message):
@@ -26,12 +24,19 @@ class ModCommands():
         warns = database_context.insert_or_update_warns(server_id, user_id)
 
         if warns % 3 != 0:
-            await channel.send('Usuário {} tomou seu {} warn'.format(user.mention, warns))
+            await channel.send('Usuário {} tomou seu {} warn.'.format(user.mention, warns))
         else:
-            await channel.send('Usuário {} banido com {} warnings'.format(user.mention, warns))
+            await channel.send('Usuário {} banido com {} warnings.'.format(user.mention, warns))
             await message.guild.ban(user)
             
         return
+    
+    async def check_warns(self, user, server_id, channel):
+        database_context = DatabaseContext.DatabaseContext()
+        user_id = user.id
+        warns = database_context.get_warns_by_user_id(user_id, server_id)
+        await channel.send('Usuário {} tem {} warns.'.format(user.mention, warns))
+        return 
 
     async def get_user_info(self, message):
         # TODO complete this method

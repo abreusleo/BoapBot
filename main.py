@@ -47,6 +47,12 @@ class MyClient(discord.Client):
                 warned_user = message.mentions[0].id
                 user = await client.fetch_user(warned_user)
                 await self.ModCommands.warn(server_id, user, message)
+            
+            elif content.startswith(commandPrefix + 'check') and is_admin:
+                mentioned_user = message.mentions[0].id
+                user = await client.fetch_user(mentioned_user)
+                logging.info(mentioned_user)
+                await self.ModCommands.check_warns(user, server_id, channel)
 
             elif content.startswith(commandPrefix + 'status'):
                 await client.change_presence(activity=discord.Streaming(name="Boap Bot", url="https://www.twitch.tv/SugaredBeast"))

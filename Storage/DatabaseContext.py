@@ -1,6 +1,7 @@
 import os
 import dotenv
 import pyodbc
+import logging
 
 class DatabaseContext():
     def __init__(self):
@@ -59,4 +60,17 @@ class DatabaseContext():
             return [(0,self.COMMAND_PREFIX)]
 
         return query_result
-        
+    
+    def get_warns_by_user_id(self, user_id, server_id):
+        query = 'SELECT * FROM USER_WARNS WHERE SERVER_ID = '+str(server_id)+' and USER_ID = '+str(user_id)+';'
+        logging.info(query)
+        self.cursor.execute(query)
+        query_result = self.cursor.fetchall()
+
+        self.close_context()
+
+        logging.info(query_result)
+        if not query_result:
+            return 0
+
+        return query_result[0][2]
