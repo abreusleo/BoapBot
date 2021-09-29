@@ -11,11 +11,12 @@ class ModCommands():
         return
         
     async def clear(self, message):
+        logging.info('Clear start')
         channel = message.channel
         number = utils.get_message_after_command(message)
         deletedMessages = await channel.purge(limit = int(number))
         await channel.send('{} mensagens deletadas.'.format(len(deletedMessages)))
-
+        logging.info('Clear end')
         return
 
     async def warn(self, server_id, user, message):

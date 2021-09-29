@@ -10,6 +10,7 @@ class MyClient(discord.Client):
     LOG_LEVEL = os.getenv("LOG_LEVEL", "20")
 
     ModCommands = modCommands.ModCommands()
+    ConfigCommands = configCommands.ConfigCommands()
 
     prefix_cache = {}
 
@@ -32,13 +33,14 @@ class MyClient(discord.Client):
         is_admin = author.top_role.permissions.administrator
 
         commandPrefix, self.prefix_cache = utils.update_cache(server_id, self.prefix_cache, os)
-
+        logging.info(commandPrefix)
+        logging.info(self.prefix_cache)
         try:
             if content.startswith(commandPrefix + 'clear'):
                 await self.ModCommands.clear(message)
 
             elif content.startswith(commandPrefix + 'prefix'):
-                commandPrefix = await configCommands.change_prefix(message, os)
+                commandPrefix = await self.ConfigCommands.change_prefix(message)
                 self.prefix_cache[server_id] = commandPrefix
             
             elif content.startswith(commandPrefix + 'warn') and is_admin:
