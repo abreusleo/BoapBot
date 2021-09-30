@@ -1,4 +1,3 @@
-from asyncio.windows_events import NULL
 import logging
 import Storage.DatabaseContext as databaseContext
 
@@ -6,7 +5,7 @@ def get_message_after_command(message):
     msg = message.content.split()
     return msg[1]
 
-def get_prefix_by_id(os, id):
+def get_prefix_by_id(id):
     database_context = databaseContext.DatabaseContext()
 
     queryResult = database_context.get_prefix_by_id(id)
@@ -19,11 +18,11 @@ def check_if_tagged(message):
 
     if(len(msg) > 1):
         return msg[1]
-    return NULL
+    return None
 
 def update_cache(server_id, prefix_cache, os):
     if server_id not in prefix_cache:
-        commandPrefix = get_prefix_by_id(os, server_id)
+        commandPrefix = get_prefix_by_id(server_id)
         prefix_cache[server_id] = commandPrefix
     else:
         commandPrefix = prefix_cache[server_id]

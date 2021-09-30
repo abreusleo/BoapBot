@@ -11,12 +11,10 @@ class ModCommands():
         return
         
     async def clear(self, message):
-        logging.info('Clear start')
         channel = message.channel
         number = utils.get_message_after_command(message)
         deletedMessages = await channel.purge(limit = int(number))
         await channel.send('{} mensagens deletadas.'.format(len(deletedMessages)))
-        logging.info('Clear end')
         return
 
     async def warn(self, server_id, user, message):
@@ -26,12 +24,29 @@ class ModCommands():
         warns = database_context.insert_or_update_warns(server_id, user_id)
 
         if warns % 3 != 0:
-            await channel.send('Usuário {} tomou seu {} warn'.format(user.mention, warns))
+            await channel.send('Usuário {} tomou seu {} warn.'.format(user.mention, warns))
         else:
-            await channel.send('Usuário {} banido com {} warnings'.format(user.mention, warns))
+            await channel.send('Usuário {} banido com {} warnings.'.format(user.mention, warns))
             await message.guild.ban(user)
-            
+
         return
+    
+    async def check_warns(self, user, server_id, channel):
+        database_context = DatabaseContext.DatabaseContext()
+        user_id = user.id
+        warns = database_context.get_warns_by_user_id(user_id, server_id)
+        await channel.send('Usuário {} tem {} warns.'.format(user.mention, warns))
+        return 
+    
+    async def clear_warns(self, user, server_id, channel):
+        database_context = DatabaseContext.DatabaseContext()
+        user_id = user.id
+        occurrences = database_context.clear_warns(user_id, server_id)
+        if occurrences == 0:
+            await channel.send('O usuário {} não tem warns registrados.'.format(user.mention))
+        else:
+            await channel.send('Os warns do usuário {} foram resetados.'.format(user.mention))
+        return 
 
     async def get_user_info(self, message):
         # TODO complete this method

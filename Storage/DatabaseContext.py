@@ -1,6 +1,7 @@
 import os
 import dotenv
 import pyodbc
+import logging
 
 class DatabaseContext():
     def __init__(self):
@@ -49,6 +50,19 @@ class DatabaseContext():
         self.close_context()
         return warns
 
+    def clear_warns(self, user_id, server_id):
+        query = 'SELECT * FROM USER_WARNS WHERE SERVER_ID = '+str(server_id)+' and USER_ID = '+str(user_id)+';'
+        logging.info(query)
+        self.cursor.execute(query)
+        occurrences = len(self.cursor.fetchall())
+        logging.info(occurrences)
+        if occurrences != 0:
+            query = 'UPDATE USER_WARNS SET WARNS = 0 WHERE SERVER_ID = \''+str(server_id)+'\' AND USER_ID = \''+str(user_id)+'\';'
+
+        self.cursor.execute(query)
+        self.close_context()
+        return occurrences
+
     def get_prefix_by_id(self, id):
         self.cursor.execute('SELECT * FROM SERVER_CONFIGURATION WHERE ID = '+str(id)+';')
         query_result = self.cursor.fetchall()
@@ -59,4 +73,17 @@ class DatabaseContext():
             return [(0,self.COMMAND_PREFIX)]
 
         return query_result
-        
+    
+    def get_warns_by_user_id(self, user_id, server_id):
+        query = 'SELECT * FROM USER_WARNS WHERE SERVER_ID = '+str(server_id)+' and USER_ID = '+str(user_id)+';'
+        logging.info(query)
+        self.cursor.execute(query)
+        query_result = self.cursor.fetchall()
+
+        self.close_context()
+
+        logging.info(query_result)
+        if not query_result:
+            return 0
+
+        return query_result[0][2]
