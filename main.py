@@ -12,6 +12,8 @@ class MyClient(discord.Client):
     ModCommands = modCommands.ModCommands()
     ConfigCommands = configCommands.ConfigCommands()
 
+    commands = ["clear", "prefix", "warn", "check", "reset", "status"]
+
     prefix_cache = {}
 
     async def bot_error(self, command, channel):
@@ -36,10 +38,10 @@ class MyClient(discord.Client):
         logging.info(commandPrefix)
         logging.info(self.prefix_cache)
         try:
-            if content.startswith(commandPrefix + 'clear'):
+            if content.startswith(commandPrefix + 'clear') and is_admin:
                 await self.ModCommands.clear(message)
 
-            elif content.startswith(commandPrefix + 'prefix'):
+            elif content.startswith(commandPrefix + 'prefix') and is_admin:
                 commandPrefix = await self.ConfigCommands.change_prefix(message)
                 self.prefix_cache[server_id] = commandPrefix
             
@@ -58,13 +60,18 @@ class MyClient(discord.Client):
                 logging.info("MentionedUser {}".format(mentioned_user))
                 user = await client.fetch_user(mentioned_user)
                 await self.ModCommands.clear_warns(user, server_id, channel)
-            
-            elif content.startswith('Boa noite') and author.id == 131085886409408513:
-                await channel.send('valeu')
 
             elif content.startswith(commandPrefix + 'status'):
                 await client.change_presence(activity=discord.Streaming(name="Boap Bot", url="https://www.twitch.tv/SugaredBeast"))
                 await channel.purge(limit = 1)
+
+            elif content.startswith(commandPrefix + 'help'):
+                await channel.send('Não tem front end, desculpa...')
+                await channel.send(self.commands)
+
+
+            elif content.startswith('Boa noite') and author.id == 131085886409408513:
+                await channel.send('valeu')
 
         except:
             await self.bot_error(content.split()[0], channel)
